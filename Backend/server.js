@@ -10,7 +10,7 @@ mongoose.connect(process.env.MONGO_URI, {
   useUnifiedTopology: true,
 });
 
-const Student = require('./models/student')
+//const Student = require('./models/student')
 app.use(express.json());
 
 //user signup POST method
