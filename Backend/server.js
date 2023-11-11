@@ -80,17 +80,17 @@ db.once('open', () => {
 });
 
 
-const clearanceReportController = require('./clearanceReportController');
+//const clearanceReportController = require('./controllers/clearenceReportController');
 
-app.post('/reports', clearanceReportController.createReport);
-app.get('/reports', clearanceReportController.getReports);
-app.get('/reports/:reportId', clearanceReportController.getReportById);
-app.put('/reports/:reportId', clearanceReportController.updateReport);
-app.delete('/reports/:reportId', clearanceReportController.deleteReport);
+//app.post('/reports', clearanceReportController.createReport);
+//app.get('/reports', clearanceReportController.getReports);
+//app.get('/reports/:reportId', clearanceReportController.getReportById);
+//app.put('/reports/:reportId', clearanceReportController.updateReport);
+//app.delete('/reports/:reportId', clearanceReportController.deleteReport);
 
 
 app.listen(port, () => {
-    console.log('Server is running on port 3001');
+    console.log('Server is running on port 5000');
 });
 
 

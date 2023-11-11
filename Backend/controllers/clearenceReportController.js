@@ -1,4 +1,4 @@
-const ClearanceReport = require('./clearanceReport');
+const ClearanceReport = require('./models/clearenceReport');
 
 // Create a new clearance report
 exports.createReport = (req, res) => {
