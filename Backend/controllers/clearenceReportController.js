@@ -1,4 +1,16 @@
 const ClearanceReport = require('./clearanceReport');
+// Example code to save the signature image
+const fs = require('fs');
+const path = require('path');
+
+
+const saveSignatureImage = (signatureImage, signatureId) => {
+  const privateFolderPath = path.join(__dirname, 'private/images');
+  const imagePath = path.join(privateFolderPath, `${signatureId}.png`);
+
+  fs.writeFileSync(imagePath, signatureImage, 'base64');
+};
+
 
 // Create a new clearance report
 exports.createReport = (req, res) => {
@@ -125,4 +137,6 @@ exports.VCSign = (req, res) => {
       }
     );
   };
+
+  
   

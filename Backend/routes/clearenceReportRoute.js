@@ -15,6 +15,15 @@ router.get('/student-restricted', isStudent, (req, res) => {
   res.status(200).json({ message: 'Welcome, Student!' });
 });
 
+const { isAuthenticated } = require('../middleware/authMiddleware');
+
+// Example route
+app.get('/clearance-report', isAuthenticated, (req, res) => {
+  // Logic to retrieve and send clearance report for the logged-in user
+  res.json({ clearanceReport: 'Data for the user' });
+});
+
+
 // Get a list of all clearance reports
 router.get('/reports', clearanceReportController.getReports);
 
