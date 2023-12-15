@@ -1,5 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
+
+const nodemailer = require('nodemailer');
+const fs = require('fs');
+const PDFDocument = require('pdfkit');
 require('dotenv').config();
 
 const app = express();
@@ -87,8 +91,57 @@ app.get('/reports', clearanceReportController.getReports);
 app.get('/reports/:reportId', clearanceReportController.getReportById);
 app.put('/reports/:reportId', clearanceReportController.updateReport);
 app.delete('/reports/:reportId', clearanceReportController.deleteReport);
+///---------------------------------------------------------------------------------------------------------------
+const generatePDF = () => {
+  const doc = new PDFDocument();
+  doc.pipe(fs.createWriteStream('clearance_report.pdf'));
+  doc.text('Clearance Report\n\nThis is a sample clearance report.');
+  doc.end();
+};
 
+app.post('/generate-clearance-report/:email', async (req, res) => {
+  const userEmail = req.params.email;
 
+  // Generate clearance report
+  generatePDF();
+
+  // Save clearance report to MongoDB
+  const newClearance = new Clearance({ email: userEmail /* other fields... */ });
+  await newClearance.save();
+
+  // Send email notification with attachment
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER, // Use your actual email address here if needed
+      pass: process.env.EMAIL_PASSWORD, // Use your actual email password here if needed
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: userEmail,
+    subject: 'Clearance Report Ready',
+    text: 'Dear user, your clearance report is now available for download.',
+    attachments: [
+      {
+        filename: 'clearance_report.pdf',
+        path: 'clearance_report.pdf',
+        contentType: 'application/pdf',
+      },
+    ],
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error(error);
+      res.status(500).send('Error sending email notification');
+    } else {
+      console.log('Email sent: ' + info.response);
+      res.status(200).send('Clearance report generated and email sent successfully');
+    }
+  });
+});
 app.listen(port, () => {
     console.log('Server is running on port 3001');
 });
